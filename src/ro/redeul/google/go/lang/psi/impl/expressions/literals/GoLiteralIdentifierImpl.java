@@ -21,10 +21,7 @@ import ro.redeul.google.go.lang.psi.expressions.literals.composite.GoLiteralComp
 import ro.redeul.google.go.lang.psi.expressions.primary.GoLiteralExpression;
 import ro.redeul.google.go.lang.psi.impl.GoPsiElementBase;
 import ro.redeul.google.go.lang.psi.patterns.GoElementPatterns;
-import ro.redeul.google.go.lang.psi.resolve.references.CompositeElementOfStructFieldReference;
-import ro.redeul.google.go.lang.psi.resolve.references.LabelReference;
-import ro.redeul.google.go.lang.psi.resolve.references.ShortVarDeclarationReference;
-import ro.redeul.google.go.lang.psi.resolve.references.VarOrConstReference;
+import ro.redeul.google.go.lang.psi.resolve.references.*;
 import ro.redeul.google.go.lang.psi.toplevel.*;
 import ro.redeul.google.go.lang.psi.types.GoPsiTypeName;
 import ro.redeul.google.go.lang.psi.types.GoPsiTypeStruct;
@@ -209,7 +206,8 @@ public class GoLiteralIdentifierImpl extends GoPsiElementBase
             return refs(new ShortVarDeclarationReference(this));
 
         if (VarOrConstReference.MATCHER.accepts(this))
-            return refs(new VarOrConstReference(this));
+//            return refs(new VarOrConstReference(this), new PackageReference(this));
+            return refs(new PackageReference(this));
 
         return refs(PsiReference.EMPTY_ARRAY);
     }

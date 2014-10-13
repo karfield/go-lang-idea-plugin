@@ -244,8 +244,7 @@ public class GoFileImpl extends PsiFileBase implements GoFile {
         PsiElement child = this.getLastChild();
 
         while (child != null) {
-            if (!(child instanceof GoImportDeclarations) &&
-                !child.processDeclarations(processor, state, null, place))
+            if (!(child instanceof GoImportDeclarations) && !child.processDeclarations(processor, state, null, place))
                 return false;
 
             child = child.getPrevSibling();

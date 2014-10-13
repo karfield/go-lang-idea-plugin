@@ -157,6 +157,11 @@
         <component>
             <implementation-class>ro.redeul.google.go.ide.ui.GoToolWindow</implementation-class>
         </component>
+
+        <component>
+            <implementation-class>ro.redeul.google.go.lang.packages.GoPackages</implementation-class>
+        </component>
+
     </project-components>
 
     <actions>
@@ -316,8 +321,9 @@
                 serviceInterface="ro.redeul.google.go.ide.GoProjectSettings"
                 serviceImplementation="ro.redeul.google.go.ide.GoProjectSettings"/>
 
-        <projectConfigurable instance="ro.redeul.google.go.ide.GoConfigurable"/>
-        <applicationConfigurable instance="ro.redeul.google.go.ide.GoGlobalConfigurable"/>
+        <projectConfigurable instance="ro.redeul.google.go.ide.GoConfigurable" groupId="tools"/>
+
+        <applicationConfigurable instance="ro.redeul.google.go.ide.GoGlobalConfigurable" groupId="tools"/>
 
         <projectImportProvider implementation="ro.redeul.google.go.wizards.importWizard.GoProjectImportProvider" />
         <projectImportBuilder implementation="ro.redeul.google.go.wizards.importWizard.GoProjectImportBuilder" />
@@ -380,8 +386,7 @@
                                    implementationClass="ro.redeul.google.go.lang.parameterInfo.GoParameterInfoHandler"/>
 
         <!-- SM Test runner tests locations -->
-        <testSrcLocator
-                implementation="ro.redeul.google.go.runner.GoTestLocationProvider"/>
+        <testSrcLocator implementation="ro.redeul.google.go.runner.GoTestLocationProvider"/>
 
         <annotator language="Google Go"
                    implementationClass="ro.redeul.google.go.annotator.GoAnnotator"/>
@@ -400,8 +405,7 @@
                 implementation="ro.redeul.google.go.ide.contributor.GoGoToSymbolContributor"/>
 
         <sdkType implementation="ro.redeul.google.go.config.sdk.GoSdkType"/>
-        <sdkType
-                implementation="ro.redeul.google.go.config.sdk.GoAppEngineSdkType"/>
+        <sdkType implementation="ro.redeul.google.go.config.sdk.GoAppEngineSdkType"/>
 
         <configurationType
                 implementation="ro.redeul.google.go.runner.GoApplicationConfigurationType"/>

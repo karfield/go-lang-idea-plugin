@@ -222,8 +222,7 @@ public class GoLiteralExpressionImpl extends GoExpressionBase
     @NotNull
     @Override
     public GoType[] getType() {
-        return GoPsiManager.getInstance(getProject())
-                .getType(this, TYPE_CALCULATOR);
+        return GoPsiManager.getInstance(getProject()).getType(this, TYPE_CALCULATOR);
     }
 
     @Override
@@ -301,6 +300,6 @@ public class GoLiteralExpressionImpl extends GoExpressionBase
                     new CallOrConversionReference(this),
                     new VarOrConstReference((GoLiteralIdentifier) this.getLiteral()));
 
-        return super.getReferences();    //To change body of overridden methods use File | Settings | File Templates.
+        return super.getReferences();
     }
 }

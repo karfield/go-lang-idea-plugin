@@ -16,8 +16,8 @@ import ro.redeul.google.go.lang.psi.visitors.GoElementVisitor;
 import static ro.redeul.google.go.lang.psi.processors.GoResolveStates.VisiblePackageName;
 
 public abstract class GoPsiReferenceResolver<Reference extends PsiReference>
-    extends GoElementVisitor
-    implements PsiScopeProcessor {
+        extends GoElementVisitor
+        implements PsiScopeProcessor {
 
     private PsiElement declaration;
     private PsiElement childDeclaration;
@@ -40,12 +40,12 @@ public abstract class GoPsiReferenceResolver<Reference extends PsiReference>
     }
 
     boolean checkReference(PsiElement element) {
-        if ( element == null )
+        if (element == null)
             return false;
 
         try {
             element.putUserData(VisiblePackageName,
-                                getState().get(VisiblePackageName));
+                    getState().get(VisiblePackageName));
             return getReference().isReferenceTo(element);
 
         } finally {

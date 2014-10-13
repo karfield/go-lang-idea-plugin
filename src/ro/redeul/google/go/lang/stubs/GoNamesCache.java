@@ -156,8 +156,7 @@ public class GoNamesCache {
 
         StubIndex index = StubIndex.getInstance();
 
-        Collection<String> keys = index.getAllKeys(GoPackageImportPath.KEY,
-                                                   project);
+        Collection<String> keys = index.getAllKeys(GoPackageImportPath.KEY, project);
 
         Collection<String> packagesCollection = new ArrayList<String>();
 

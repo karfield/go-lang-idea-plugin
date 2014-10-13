@@ -1,6 +1,7 @@
 package ro.redeul.google.go.lang.psi.visitors;
 
 import ro.redeul.google.go.lang.psi.GoFile;
+import ro.redeul.google.go.lang.psi.GoPackage;
 import ro.redeul.google.go.lang.psi.GoPsiElement;
 import ro.redeul.google.go.lang.psi.declarations.GoConstDeclaration;
 import ro.redeul.google.go.lang.psi.declarations.GoConstDeclarations;
@@ -273,5 +274,9 @@ public class GoElementVisitor  {
 
     public void visitBinaryExpression(GoBinaryExpression expression) {
         visitElement(expression);
+    }
+
+    public void visitPackage(GoPackage aPackage) {
+        visitElement(aPackage);
     }
 }
