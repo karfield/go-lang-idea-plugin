@@ -6,7 +6,7 @@ import com.intellij.psi.impl.source.resolve.ResolveCache;
 import org.jetbrains.annotations.NotNull;
 import ro.redeul.google.go.lang.psi.expressions.literals.GoLiteralIdentifier;
 import ro.redeul.google.go.lang.psi.expressions.primary.GoLiteralExpression;
-import ro.redeul.google.go.lang.psi.processors.GoResolveStates;
+import ro.redeul.google.go.lang.psi.processors.ResolveStates;
 import ro.redeul.google.go.lang.psi.resolve.GoResolveResult;
 import ro.redeul.google.go.lang.psi.resolve.PackageResolver;
 import ro.redeul.google.go.lang.psi.utils.GoPsiScopesUtil;
@@ -31,7 +31,7 @@ public class PackageReference extends GoPsiReference<GoLiteralIdentifier, GoLite
                             processor,
                             reference.getElement().getParent().getParent(),
                             reference.getElement().getContainingFile(),
-                            GoResolveStates.initial());
+                            ResolveStates.initial());
 
                     return GoResolveResult.fromElement(processor.getChildDeclaration());
                 }

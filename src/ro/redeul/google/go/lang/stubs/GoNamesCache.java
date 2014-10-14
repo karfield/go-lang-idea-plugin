@@ -192,8 +192,7 @@ public class GoNamesCache {
                                                           @NotNull GlobalSearchScope scope) {
         StubIndex index = StubIndex.getInstance();
 
-        Collection<GoFile> files = StubIndex.getElements(GoPackageImportPath.KEY,
-                importPath, project, scope, GoFile.class);
+        Collection<GoFile> files = StubIndex.getElements(GoPackageImportPath.KEY, importPath, project, scope, GoFile.class);
         removeExcludedFiles(files);
         return files;
     }

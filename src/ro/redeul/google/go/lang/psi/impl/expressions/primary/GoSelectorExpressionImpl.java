@@ -7,6 +7,7 @@ import com.intellij.psi.PsiReference;
 import com.intellij.util.Function;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ro.redeul.google.go.lang.psi.GoPackage;
 import ro.redeul.google.go.lang.psi.GoPsiElement;
 import ro.redeul.google.go.lang.psi.expressions.GoPrimaryExpression;
 import ro.redeul.google.go.lang.psi.expressions.literals.GoLiteralIdentifier;
@@ -162,10 +163,13 @@ public class GoSelectorExpressionImpl extends GoExpressionBase
 
         GoType type = baseTypes[0];
 
-        if (type instanceof GoTypePackage)
-            return new PsiReference[] {
-                new MethodReference(this)
+        if (type instanceof GoTypePackage) {
+            GoPackage goPackage = ((GoTypePackage) type).getPackage();
+            return new PsiReference[]{
+                    new VarOrConstReference(getIdentifier(), goPackage),
+                    new MethodReference(this)
             };
+        }
 
         if (type instanceof GoTypePointer)
             type = ((GoTypePointer) type).getTargetType();

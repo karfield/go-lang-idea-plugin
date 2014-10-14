@@ -23,7 +23,7 @@ import ro.redeul.google.go.lang.psi.GoFile;
 import ro.redeul.google.go.lang.psi.GoPsiElement;
 import ro.redeul.google.go.lang.psi.declarations.GoConstDeclarations;
 import ro.redeul.google.go.lang.psi.declarations.GoVarDeclarations;
-import ro.redeul.google.go.lang.psi.processors.GoResolveStates;
+import ro.redeul.google.go.lang.psi.processors.ResolveStates;
 import ro.redeul.google.go.lang.psi.toplevel.*;
 import ro.redeul.google.go.lang.psi.visitors.GoElementVisitor;
 import ro.redeul.google.go.lang.psi.visitors.GoElementVisitorWithData;
@@ -84,15 +84,14 @@ public class GoFileImpl extends PsiFileBase implements GoFile {
             return "";
         }
 
-        String path = VfsUtil.getRelativePath(virtualFile.getParent(),
-                                              sourceRoot, '/');
+        String path = VfsUtil.getRelativePath(virtualFile.getParent(), sourceRoot, '/');
 
         if (path == null || path.equals(""))
             path = getPackageName();
 
-        if (path != null && !isApplicationPart() && !path.endsWith(getPackageName()) && !path.toLowerCase().endsWith(getPackageName())) {
-            path = path + "/" + getPackageName();
-        }
+//        if (path != null && !isApplicationPart() && !path.endsWith(getPackageName()) && !path.toLowerCase().endsWith(getPackageName())) {
+//            path = path + "/" + getPackageName();
+//        }
 
         String makefileTarget =
             GoUtil.getTargetFromMakefile(
@@ -247,12 +246,13 @@ public class GoFileImpl extends PsiFileBase implements GoFile {
             if (!(child instanceof GoImportDeclarations) && !child.processDeclarations(processor, state, null, place))
                 return false;
 
-            child = child.getPrevSibling();
+            do {
+                child = child.getPrevSibling();
+            } while (child != null && child instanceof PsiWhiteSpace);
         }
 
-        if (state.get(GoResolveStates.IsOriginalFile)) {
-            ResolveState newState =
-                state.put(GoResolveStates.IsOriginalFile, false);
+        if (ResolveStates.get(state, ResolveStates.Key.IsOriginalFile)) {
+            ResolveState newState = state.put(ResolveStates.Key.IsOriginalFile, false);
 
             GoNamesCache names = GoNamesCache.getInstance(getProject());
 

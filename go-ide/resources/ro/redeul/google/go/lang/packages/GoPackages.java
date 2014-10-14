@@ -63,7 +63,7 @@ public class GoPackages extends AbstractProjectComponent {
         for (VirtualFile sourceRoot : sourceRoots) {
             VirtualFile packagePath = sourceRoot.findFileByRelativePath(path);
             if ( packagePath != null && packagePath.isDirectory()) {
-                return new GoPackageImpl(path, sourceRoot.getCanonicalPath(), PsiManager.getInstance(myProject));
+                return new GoPackageImpl(packagePath, sourceRoot, PsiManager.getInstance(myProject));
             }
         }
 
