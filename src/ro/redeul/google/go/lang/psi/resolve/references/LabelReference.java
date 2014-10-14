@@ -21,7 +21,7 @@ import static ro.redeul.google.go.lang.parser.GoElementTypes.*;
 import static ro.redeul.google.go.lang.psi.utils.GoPsiUtils.findParentOfType;
 
 public class LabelReference
-    extends GoPsiReference.Single<GoLiteralIdentifier, LabelReference> {
+    extends Reference.Single<GoLiteralIdentifier, LabelSolver, LabelReference> {
 
     @SuppressWarnings("unchecked")
     public static final ElementPattern<GoLiteralIdentifier> MATCHER =

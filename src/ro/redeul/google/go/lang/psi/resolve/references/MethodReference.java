@@ -12,7 +12,7 @@ import ro.redeul.google.go.lang.psi.GoPsiElement;
 import ro.redeul.google.go.lang.psi.expressions.literals.GoLiteralIdentifier;
 import ro.redeul.google.go.lang.psi.expressions.primary.GoSelectorExpression;
 import ro.redeul.google.go.lang.psi.resolve.GoResolveResult;
-import ro.redeul.google.go.lang.psi.resolve.MethodResolver;
+import ro.redeul.google.go.lang.psi.resolve.MethodSolver;
 import ro.redeul.google.go.lang.psi.types.GoPsiType;
 import ro.redeul.google.go.lang.psi.types.GoPsiTypePointer;
 import ro.redeul.google.go.lang.psi.types.struct.GoTypeStructAnonymousField;
@@ -22,7 +22,7 @@ import ro.redeul.google.go.util.LookupElementUtil;
 import java.util.*;
 
 public class MethodReference
-    extends GoPsiReference.Single<GoSelectorExpression, MethodReference> {
+    extends Reference.Single<GoSelectorExpression, MethodReference> {
 
     private Set<GoTypeName> receiverTypes;
 
@@ -30,7 +30,7 @@ public class MethodReference
             new ResolveCache.AbstractResolver<MethodReference, GoResolveResult>() {
                 @Override
                 public GoResolveResult resolve(@NotNull MethodReference methodReference, boolean incompleteCode) {
-                    MethodResolver processor = new MethodResolver(methodReference);
+                    MethodSolver processor = new MethodSolver(methodReference);
 
                     GoSelectorExpression element = methodReference.getElement();
 
@@ -84,9 +84,9 @@ public class MethodReference
 
         final List<LookupElementBuilder> variants = new ArrayList<LookupElementBuilder>();
 
-        MethodResolver processor = new MethodResolver(this) {
+        MethodSolver processor = new MethodSolver(this) {
             @Override
-            protected boolean addDeclaration(PsiElement declaration, PsiElement child) {
+            protected boolean addTarget(PsiElement declaration, PsiElement child) {
                 String name = PsiUtilCore.getName(declaration);
 
                 if (child == null) {

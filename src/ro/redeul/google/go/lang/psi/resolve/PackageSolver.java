@@ -5,16 +5,16 @@ import ro.redeul.google.go.lang.psi.GoPackageReference;
 import ro.redeul.google.go.lang.psi.resolve.references.PackageReference;
 import ro.redeul.google.go.lang.psi.toplevel.GoImportDeclaration;
 
-public class PackageResolver extends GoPsiReferenceResolver<PackageReference> {
+public class PackageSolver extends RefSolver<PackageReference, PackageSolver> {
 
-    public PackageResolver(PackageReference reference) {
+    public PackageSolver(PackageReference reference) {
         super(reference);
     }
 
     @Override
     public void visitImportDeclaration(GoImportDeclaration declaration) {
         if (isReferenceTo(declaration))
-            addDeclaration(declaration);
+            addTarget(declaration);
     }
 
     boolean isReferenceTo(GoImportDeclaration importDeclaration) {

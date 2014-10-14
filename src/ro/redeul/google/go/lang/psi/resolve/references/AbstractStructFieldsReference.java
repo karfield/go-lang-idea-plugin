@@ -26,7 +26,7 @@ abstract class AbstractStructFieldsReference
         T extends GoPsiElement,
         Ref extends AbstractStructFieldsReference<T, Ref>
     >
-    extends GoPsiReference<T, GoLiteralIdentifier, Ref> {
+    extends Reference<T, GoLiteralIdentifier, Ref> {
 
     AbstractStructFieldsReference(T element,
                                   GoLiteralIdentifier name,
@@ -57,13 +57,13 @@ abstract class AbstractStructFieldsReference
 
         for (GoTypeStructField field : psiType.getFields()) {
             for (GoLiteralIdentifier identifier : field.getIdentifiers()) {
-                if ( !isImportedStruct || GoNamesUtil.isExportedName(identifier.getName()))
+                if ( !isImportedStruct || GoNamesUtil.isExported(identifier.getName()))
                     variants.add(field.getCompletionPresentation(identifier));
             }
         }
 
         for (GoTypeStructAnonymousField field : psiType.getAnonymousFields()) {
-            if ( !isImportedStruct || GoNamesUtil.isExportedName(field.getFieldName()))
+            if ( !isImportedStruct || GoNamesUtil.isExported(field.getFieldName()))
                 variants.add(field.getCompletionPresentation());
         }
 
@@ -71,13 +71,13 @@ abstract class AbstractStructFieldsReference
         for (GoLiteralIdentifier identifier : promotedFields.getNamedFields()) {
             GoTypeStructField field = findParentOfType(identifier, GoTypeStructField.class);
             if (field != null) {
-                if ( !isImportedStruct || GoNamesUtil.isExportedName(identifier.getName()))
+                if ( !isImportedStruct || GoNamesUtil.isExported(identifier.getName()))
                     variants.add(field.getCompletionPresentation(identifier));
             }
         }
 
         for (GoTypeStructAnonymousField field : promotedFields.getAnonymousFields()) {
-            if ( !isImportedStruct || GoNamesUtil.isExportedName(field.getFieldName()))
+            if ( !isImportedStruct || GoNamesUtil.isExported(field.getFieldName()))
                 variants.add(field.getCompletionPresentation());
         }
         return variants.toArray(new LookupElementBuilder[variants.size()]);

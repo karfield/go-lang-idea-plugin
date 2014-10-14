@@ -9,7 +9,7 @@ import ro.redeul.google.go.lang.psi.GoPsiElement;
 import ro.redeul.google.go.lang.psi.expressions.primary.GoLiteralExpression;
 import ro.redeul.google.go.lang.psi.processors.ResolveStates;
 import ro.redeul.google.go.lang.psi.resolve.GoResolveResult;
-import ro.redeul.google.go.lang.psi.resolve.MethodOrTypeNameResolver;
+import ro.redeul.google.go.lang.psi.resolve.MethodOrTypeNameSolver;
 import ro.redeul.google.go.lang.psi.utils.GoPsiScopesUtil;
 
 import java.util.ArrayList;
@@ -27,8 +27,8 @@ public class CallOrConversionReference extends AbstractCallOrConversionReference
             new ResolveCache.AbstractResolver<CallOrConversionReference, GoResolveResult>() {
                 @Override
                 public GoResolveResult resolve(@NotNull CallOrConversionReference psiReference, boolean incompleteCode) {
-                    MethodOrTypeNameResolver processor =
-                            new MethodOrTypeNameResolver(psiReference);
+                    MethodOrTypeNameSolver<CallOrConversionReference> processor =
+                            new MethodOrTypeNameSolver<CallOrConversionReference>(psiReference);
 
                     GoLiteralExpression expression = psiReference.getElement();
                     GoPsiScopesUtil.treeWalkUp(
@@ -53,10 +53,10 @@ public class CallOrConversionReference extends AbstractCallOrConversionReference
 
         final List<LookupElementBuilder> variants = new ArrayList<LookupElementBuilder>();
 
-        MethodOrTypeNameResolver processor =
-                new MethodOrTypeNameResolver(this) {
+        MethodOrTypeNameSolver<CallOrConversionReference> processor =
+                new MethodOrTypeNameSolver<CallOrConversionReference>(this) {
                     @Override
-                    protected boolean addDeclaration(PsiElement declaration, PsiElement child) {
+                    protected boolean addTarget(PsiElement declaration, PsiElement child) {
                         String name = PsiUtilCore.getName(child);
 
 //                        String visiblePackageName =

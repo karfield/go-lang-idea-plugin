@@ -12,7 +12,7 @@ import ro.redeul.google.go.lang.psi.expressions.literals.GoLiteralIdentifier;
 import ro.redeul.google.go.lang.psi.expressions.primary.GoLiteralExpression;
 import ro.redeul.google.go.lang.psi.processors.ResolveStates;
 import ro.redeul.google.go.lang.psi.resolve.GoResolveResult;
-import ro.redeul.google.go.lang.psi.resolve.VarOrConstResolver;
+import ro.redeul.google.go.lang.psi.resolve.VarOrConstSolver;
 import ro.redeul.google.go.lang.psi.utils.GoPsiScopesUtil;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ import static com.intellij.patterns.PlatformPatterns.psiElement;
 import static ro.redeul.google.go.util.LookupElementUtil.createLookupElement;
 
 public class VarOrConstReference
-        extends GoPsiReference.Single<GoLiteralIdentifier, VarOrConstReference> {
+        extends Reference.Single<GoLiteralIdentifier, VarOrConstSolver, VarOrConstReference> {
 
     GoPackage targetPackage;
 
@@ -36,19 +36,8 @@ public class VarOrConstReference
             new ResolveCache.AbstractResolver<VarOrConstReference, GoResolveResult>() {
                 @Override
                 public GoResolveResult resolve(@NotNull VarOrConstReference ref, boolean incompleteCode) {
-                    VarOrConstResolver processor = new VarOrConstResolver(ref);
+                    VarOrConstSolver processor = new VarOrConstSolver(ref);
 
-                    if (ref.targetPackage == null)
-                        GoPsiScopesUtil.treeWalkUp(
-                                processor,
-                                ref.getElement().getParent().getParent(),
-                                ref.getElement().getContainingFile(),
-                                ResolveStates.initial());
-                    else
-                        GoPsiScopesUtil.packageWalk(
-                                ref.targetPackage, processor, ref.getElement(),
-                                ResolveStates.packageExports()
-                        );
 
                     return GoResolveResult.fromElement(processor.getChildDeclaration());
                 }
@@ -68,6 +57,26 @@ public class VarOrConstReference
         return this;
     }
 
+    @Override
+    public VarOrConstSolver newSolver() {
+        return new VarOrConstSolver(self());
+    }
+
+    @Override
+    public void walkSolver(VarOrConstSolver solver) {
+        if (ref.targetPackage == null)
+            GoPsiScopesUtil.treeWalkUp(
+                    processor,
+                    ref.getElement().getParent().getParent(),
+                    ref.getElement().getContainingFile(),
+                    ResolveStates.initial());
+        else
+            GoPsiScopesUtil.packageWalk(
+                    ref.targetPackage, processor, ref.getElement(),
+                    ResolveStates.packageExports()
+            );
+    }
+
     @NotNull
     @Override
     public String getCanonicalText() {
@@ -79,44 +88,44 @@ public class VarOrConstReference
         return getElement().getManager().areElementsEquivalent(resolve(), element);
     }
 
-    @NotNull
-    @Override
-    public Object[] getVariants() {
-
-        final List<LookupElementBuilder> variants = new ArrayList<LookupElementBuilder>();
-
-        VarOrConstResolver processor = new VarOrConstResolver(this) {
-            @Override
-            protected boolean addDeclaration(PsiElement declaration, PsiElement childDeclaration) {
-                String name = PsiUtilCore.getName(declaration);
-
-                String visiblePackageName = "";
-//                        getState().get(ResolveStates.VisiblePackageName);
-
-                if (visiblePackageName != null) {
-                    name = "".equals(visiblePackageName) ?
-                            name : visiblePackageName + "." + name;
-                }
-                if (name == null) {
-                    return true;
-                }
-
-                GoPsiElement goPsi = (GoPsiElement) declaration;
-                GoPsiElement goChildPsi = (GoPsiElement) childDeclaration;
-                variants.add(createLookupElement(goPsi, name, goChildPsi));
-                return true;
-            }
-        };
-
-        GoPsiScopesUtil.treeWalkUp(
-                processor,
-                getElement().getParent().getParent(),
-                getElement().getContainingFile(),
-                ResolveStates.initial());
-
-        return variants.toArray();
-    }
-
+//    @NotNull
+//    @Override
+//    public Object[] getVariants() {
+//
+//        final List<LookupElementBuilder> variants = new ArrayList<LookupElementBuilder>();
+//
+//        VarOrConstSolver processor = new VarOrConstSolver(this) {
+//            @Override
+//            protected boolean addTarget(PsiElement declaration, PsiElement childDeclaration) {
+//                String name = PsiUtilCore.getName(declaration);
+//
+//                String visiblePackageName = "";
+////                        getState().get(ResolveStates.VisiblePackageName);
+//
+//                if (visiblePackageName != null) {
+//                    name = "".equals(visiblePackageName) ?
+//                            name : visiblePackageName + "." + name;
+//                }
+//                if (name == null) {
+//                    return true;
+//                }
+//
+//                GoPsiElement goPsi = (GoPsiElement) declaration;
+//                GoPsiElement goChildPsi = (GoPsiElement) childDeclaration;
+//                variants.add(createLookupElement(goPsi, name, goChildPsi));
+//                return true;
+//            }
+//        };
+//
+//        GoPsiScopesUtil.treeWalkUp(
+//                processor,
+//                getElement().getParent().getParent(),
+//                getElement().getContainingFile(),
+//                ResolveStates.initial());
+//
+//        return variants.toArray();
+//    }
+//
     @Override
     public boolean isSoft() {
         return false;

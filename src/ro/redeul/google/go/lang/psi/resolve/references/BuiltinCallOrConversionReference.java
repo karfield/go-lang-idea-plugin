@@ -3,7 +3,6 @@ package ro.redeul.google.go.lang.psi.resolve.references;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.patterns.ElementPattern;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.ResolveState;
 import com.intellij.psi.impl.source.resolve.ResolveCache;
 import com.intellij.psi.util.PsiUtilCore;
 import org.jetbrains.annotations.NotNull;
@@ -13,7 +12,7 @@ import ro.redeul.google.go.lang.psi.expressions.primary.GoBuiltinCallExpression;
 import ro.redeul.google.go.lang.psi.expressions.primary.GoLiteralExpression;
 import ro.redeul.google.go.lang.psi.processors.ResolveStates;
 import ro.redeul.google.go.lang.psi.resolve.GoResolveResult;
-import ro.redeul.google.go.lang.psi.resolve.MethodOrTypeNameResolver;
+import ro.redeul.google.go.lang.psi.resolve.MethodOrTypeNameSolver;
 import ro.redeul.google.go.lang.stubs.GoNamesCache;
 
 import java.util.ArrayList;
@@ -45,8 +44,8 @@ public class BuiltinCallOrConversionReference extends AbstractCallOrConversionRe
             public GoResolveResult resolve(@NotNull BuiltinCallOrConversionReference psiReference, boolean incompleteCode) {
                 PsiElement element = psiReference.getElement();
 
-                MethodOrTypeNameResolver processor =
-                    new MethodOrTypeNameResolver(psiReference);
+                MethodOrTypeNameSolver processor =
+                    new MethodOrTypeNameSolver(psiReference);
 
                 GoNamesCache namesCache = GoNamesCache.getInstance(element.getProject());
 
@@ -79,9 +78,9 @@ public class BuiltinCallOrConversionReference extends AbstractCallOrConversionRe
 
         final List<LookupElementBuilder> variants = new ArrayList<LookupElementBuilder>();
 
-        MethodOrTypeNameResolver processor = new MethodOrTypeNameResolver(this) {
+        MethodOrTypeNameSolver processor = new MethodOrTypeNameSolver(this) {
             @Override
-            protected boolean addDeclaration(PsiElement declaration, PsiElement child) {
+            protected boolean addTarget(PsiElement declaration, PsiElement child) {
 
                 String name = PsiUtilCore.getName(child);
 

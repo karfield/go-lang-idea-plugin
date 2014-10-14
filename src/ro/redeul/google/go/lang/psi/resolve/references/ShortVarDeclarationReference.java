@@ -19,7 +19,7 @@ import static com.intellij.patterns.PlatformPatterns.psiElement;
  * returns the identifier where it's declared. Otherwise, null is returned.
  */
 public class ShortVarDeclarationReference
-        extends GoPsiReference.Single<GoLiteralIdentifier, ShortVarDeclarationReference> {
+        extends Reference.Single<GoLiteralIdentifier, ShortVarDeclarationResolver, ShortVarDeclarationReference> {
 
     public static final ElementPattern<GoLiteralIdentifier> MATCHER =
             psiElement(GoLiteralIdentifier.class)

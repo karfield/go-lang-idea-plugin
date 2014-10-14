@@ -8,12 +8,13 @@ import ro.redeul.google.go.lang.psi.expressions.literals.GoLiteralIdentifier;
 import ro.redeul.google.go.lang.psi.expressions.primary.GoLiteralExpression;
 import ro.redeul.google.go.lang.psi.processors.ResolveStates;
 import ro.redeul.google.go.lang.psi.resolve.GoResolveResult;
-import ro.redeul.google.go.lang.psi.resolve.PackageResolver;
+import ro.redeul.google.go.lang.psi.resolve.PackageSolver;
+import ro.redeul.google.go.lang.psi.resolve.ResolveCacheResolvers;
 import ro.redeul.google.go.lang.psi.utils.GoPsiScopesUtil;
 
 import static com.intellij.patterns.PlatformPatterns.psiElement;
 
-public class PackageReference extends GoPsiReference<GoLiteralIdentifier, GoLiteralIdentifier, PackageReference> {
+public class PackageReference extends Reference<GoLiteralIdentifier, GoLiteralIdentifier, PackageSolver, PackageReference> {
 
     public static ElementPattern<GoLiteralIdentifier> MATCHER =
             psiElement(GoLiteralIdentifier.class)
@@ -22,20 +23,7 @@ public class PackageReference extends GoPsiReference<GoLiteralIdentifier, GoLite
                     );
 
     private static final ResolveCache.AbstractResolver<PackageReference, GoResolveResult> RESOLVER =
-            new ResolveCache.AbstractResolver<PackageReference, GoResolveResult>() {
-                @Override
-                public GoResolveResult resolve(@NotNull PackageReference reference, boolean incompleteCode) {
-                    PackageResolver processor = new PackageResolver(reference);
-
-                    GoPsiScopesUtil.treeWalkUp(
-                            processor,
-                            reference.getElement().getParent().getParent(),
-                            reference.getElement().getContainingFile(),
-                            ResolveStates.initial());
-
-                    return GoResolveResult.fromElement(processor.getChildDeclaration());
-                }
-            };
+            ResolveCacheResolvers.<PackageReference, PackageSolver>makeDefault();
 
     public PackageReference(@NotNull GoLiteralIdentifier element) {
         super(element, element, RESOLVER);
@@ -44,6 +32,20 @@ public class PackageReference extends GoPsiReference<GoLiteralIdentifier, GoLite
     @Override
     protected PackageReference self() {
         return this;
+    }
+
+    @Override
+    public PackageSolver newSolver() {
+        return new PackageSolver(self());
+    }
+
+    @Override
+    public void walkSolver(PackageSolver solver) {
+        GoPsiScopesUtil.treeWalkUp(
+                solver,
+                getElement().getParent().getParent(),
+                getElement().getContainingFile(),
+                ResolveStates.initial());
     }
 
     @NotNull

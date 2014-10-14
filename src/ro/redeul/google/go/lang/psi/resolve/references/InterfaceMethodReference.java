@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InterfaceMethodReference extends
-                                      GoPsiReference.Single<GoSelectorExpression, InterfaceMethodReference> {
+                                      Reference.Single<GoSelectorExpression, InterfaceMethodReference> {
 
     private final GoTypeInterface type;
     private final GoSelectorExpression selector;
