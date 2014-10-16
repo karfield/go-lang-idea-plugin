@@ -12,8 +12,9 @@ import ro.redeul.google.go.lang.psi.types.GoPsiType;
 import ro.redeul.google.go.lang.psi.types.GoPsiTypeFunction;
 
 public class MethodOrTypeNameSolver<
-        Ref extends AbstractCallOrConversionReference<Ref>>
-    extends RefSolver<Ref, MethodOrTypeNameSolver<Ref>> {
+        Ref extends AbstractCallOrConversionReference<Solver, Ref>,
+        Solver extends MethodOrTypeNameSolver<Ref, Solver>>
+    extends RefSolver<Ref, Solver> {
     public MethodOrTypeNameSolver(Ref reference) {
         super(reference);
     }
@@ -49,7 +50,7 @@ public class MethodOrTypeNameSolver<
     @Override
     public void visitShortVarDeclaration(GoShortVarDeclaration declaration) {
         GoLiteralIdentifier ids[] = declaration.getDeclarations();
-        checkIdentifiers(ids);
+        checkIdentifiers(getReferenceName(), ids);
     }
 
     private boolean checkVarDeclaration(GoShortVarDeclaration declaration) {

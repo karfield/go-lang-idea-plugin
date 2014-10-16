@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import ro.redeul.google.go.GoBundle;
 import ro.redeul.google.go.lang.completion.GoCompletionContributor;
 import ro.redeul.google.go.lang.psi.resolve.RefSolver;
-import ro.redeul.google.go.lang.psi.resolve.GoResolveResult;
+import ro.redeul.google.go.lang.psi.resolve.ResolvingCache;
 
 public abstract class Reference<
     ParentElement extends PsiElement,
@@ -20,13 +20,13 @@ public abstract class Reference<
 
     final ParentElement element;
     private final Element reference;
-    private ResolveCache.AbstractResolver<Ref, GoResolveResult> resolver;
+    private ResolveCache.AbstractResolver<Ref, ResolvingCache.Result> resolver;
 
     protected abstract Ref self();
 
     Reference(@NotNull ParentElement element,
               @NotNull Element reference,
-              @NotNull ResolveCache.AbstractResolver<Ref, GoResolveResult> resolver) {
+              @NotNull ResolveCache.AbstractResolver<Ref, ResolvingCache.Result> resolver) {
         this(element, reference);
         this.resolver = resolver;
     }
@@ -55,7 +55,7 @@ public abstract class Reference<
     @Override
     public PsiElement resolve() {
         if (resolver != null) {
-            GoResolveResult result = ResolveCache
+            ResolvingCache.Result result = ResolveCache
                 .getInstance(getElement().getProject())
                 .resolveWithCaching(self(), resolver, true, false);
 
@@ -67,6 +67,18 @@ public abstract class Reference<
         return null;
     }
 
+    @NotNull
+    @Override
+    public Object[] getVariants() {
+        Solver resolver = newSolver();
+        resolver.setCollectVariants(true);
+        walkSolver(resolver);
+        return resolver.getVariants();
+    }
+
+    public abstract Solver newSolver();
+
+    public abstract void walkSolver(RefSolver<?, ?> processor);
 
     @Override
     public PsiElement handleElementRename(String newElementName)
@@ -120,26 +132,13 @@ public abstract class Reference<
     }
 
 
-    @NotNull
-    @Override
-    public Object[] getVariants() {
-        Solver resolver = newSolver();
-        resolver.setCollectVariants(true);
-        walkSolver(resolver);
-        return resolver.getVariants();
-    }
-
-    public abstract Solver newSolver();
-
-    public abstract void walkSolver(Solver solver);
-
     abstract static class Single<
         GoPsi extends PsiElement,
         Solver extends RefSolver<Ref, Solver>,
         Ref extends Single<GoPsi, Solver, Ref>
     > extends Reference<GoPsi, GoPsi, Solver, Ref> {
 
-        Single(@NotNull GoPsi element, @NotNull ResolveCache.AbstractResolver<Ref, GoResolveResult> resolver) {
+        Single(@NotNull GoPsi element, @NotNull ResolveCache.AbstractResolver<Ref, ResolvingCache.Result> resolver) {
             super(element, element, resolver);
         }
 

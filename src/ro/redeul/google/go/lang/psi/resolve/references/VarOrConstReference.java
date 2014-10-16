@@ -1,22 +1,15 @@
 package ro.redeul.google.go.lang.psi.resolve.references;
 
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.patterns.ElementPattern;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.impl.source.resolve.ResolveCache;
-import com.intellij.psi.util.PsiUtilCore;
 import org.jetbrains.annotations.NotNull;
 import ro.redeul.google.go.lang.psi.GoPackage;
-import ro.redeul.google.go.lang.psi.GoPsiElement;
 import ro.redeul.google.go.lang.psi.expressions.literals.GoLiteralIdentifier;
 import ro.redeul.google.go.lang.psi.expressions.primary.GoLiteralExpression;
 import ro.redeul.google.go.lang.psi.processors.ResolveStates;
-import ro.redeul.google.go.lang.psi.resolve.GoResolveResult;
+import ro.redeul.google.go.lang.psi.resolve.ResolvingCache;
 import ro.redeul.google.go.lang.psi.resolve.VarOrConstSolver;
 import ro.redeul.google.go.lang.psi.utils.GoPsiScopesUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.intellij.patterns.PlatformPatterns.psiElement;
 import static ro.redeul.google.go.util.LookupElementUtil.createLookupElement;
@@ -32,16 +25,8 @@ public class VarOrConstReference
                             psiElement(GoLiteralExpression.class)
                     );
 
-    private static final ResolveCache.AbstractResolver<VarOrConstReference, GoResolveResult> RESOLVER =
-            new ResolveCache.AbstractResolver<VarOrConstReference, GoResolveResult>() {
-                @Override
-                public GoResolveResult resolve(@NotNull VarOrConstReference ref, boolean incompleteCode) {
-                    VarOrConstSolver processor = new VarOrConstSolver(ref);
-
-
-                    return GoResolveResult.fromElement(processor.getChildDeclaration());
-                }
-            };
+    private static final com.intellij.psi.impl.source.resolve.ResolveCache.AbstractResolver<VarOrConstReference, ResolvingCache.Result> RESOLVER =
+            ResolvingCache.<VarOrConstReference, VarOrConstSolver>makeDefault();
 
     public VarOrConstReference(GoLiteralIdentifier element) {
         this(element, null);
@@ -64,17 +49,11 @@ public class VarOrConstReference
 
     @Override
     public void walkSolver(VarOrConstSolver solver) {
-        if (ref.targetPackage == null)
-            GoPsiScopesUtil.treeWalkUp(
-                    processor,
-                    ref.getElement().getParent().getParent(),
-                    ref.getElement().getContainingFile(),
-                    ResolveStates.initial());
-        else
-            GoPsiScopesUtil.packageWalk(
-                    ref.targetPackage, processor, ref.getElement(),
-                    ResolveStates.packageExports()
-            );
+        GoPsiScopesUtil.treeWalkUp(
+                solver,
+                getElement().getParent().getParent(),
+                getElement().getContainingFile(),
+                ResolveStates.initial());
     }
 
     @NotNull
@@ -88,7 +67,7 @@ public class VarOrConstReference
         return getElement().getManager().areElementsEquivalent(resolve(), element);
     }
 
-//    @NotNull
+    //    @NotNull
 //    @Override
 //    public Object[] getVariants() {
 //

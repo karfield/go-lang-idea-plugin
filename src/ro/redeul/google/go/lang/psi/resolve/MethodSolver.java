@@ -12,7 +12,7 @@ import java.util.Set;
 
 import static ro.redeul.google.go.lang.completion.GoCompletionContributor.DUMMY_IDENTIFIER;
 
-public class MethodSolver extends RefSolver<MethodReference>
+public class MethodSolver extends RefSolver<MethodReference, MethodSolver>
 {
     public MethodSolver(MethodReference reference) {
         super(reference);

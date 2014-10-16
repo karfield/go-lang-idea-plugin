@@ -1,15 +1,10 @@
 package ro.redeul.google.go.lang.psi.resolve.references;
 
-import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.patterns.ElementPattern;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.impl.source.resolve.ResolveCache;
-import com.intellij.psi.util.PsiUtilCore;
 import org.jetbrains.annotations.NotNull;
-import ro.redeul.google.go.lang.psi.GoPsiElement;
 import ro.redeul.google.go.lang.psi.processors.ResolveStates;
-import ro.redeul.google.go.lang.psi.resolve.GoResolveResult;
-import ro.redeul.google.go.lang.psi.resolve.ResolveCacheResolvers;
+import ro.redeul.google.go.lang.psi.resolve.ResolvingCache;
 import ro.redeul.google.go.lang.psi.resolve.TypeNameSolver;
 import ro.redeul.google.go.lang.psi.toplevel.GoMethodReceiver;
 import ro.redeul.google.go.lang.psi.toplevel.GoTypeNameDeclaration;
@@ -20,13 +15,8 @@ import ro.redeul.google.go.lang.psi.types.GoPsiTypeName;
 import ro.redeul.google.go.lang.psi.types.GoPsiTypePointer;
 import ro.redeul.google.go.lang.psi.utils.GoPsiScopesUtil;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import static com.intellij.patterns.PlatformPatterns.psiElement;
 import static com.intellij.patterns.StandardPatterns.or;
-import static ro.redeul.google.go.lang.completion.GoCompletionUtil.getImportedPackagesNames;
 import static ro.redeul.google.go.lang.psi.utils.GoTypeUtils.resolveToFinalType;
 import static ro.redeul.google.go.util.LookupElementUtil.createLookupElement;
 
@@ -44,8 +34,8 @@ public class TypeNameReference
                     )
             );
 
-    private static final ResolveCache.AbstractResolver<TypeNameReference, GoResolveResult> RESOLVER =
-            ResolveCacheResolvers.<TypeNameReference, TypeNameSolver>makeDefault();
+    private static final com.intellij.psi.impl.source.resolve.ResolveCache.AbstractResolver<TypeNameReference, ResolvingCache.Result> RESOLVER =
+            ResolvingCache.<TypeNameReference, TypeNameSolver>makeDefault();
 
     public TypeNameReference(GoPsiTypeName element) {
         super(element, RESOLVER);

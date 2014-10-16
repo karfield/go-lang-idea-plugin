@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import ro.redeul.google.go.lang.psi.GoPsiElement;
 import ro.redeul.google.go.lang.psi.expressions.literals.GoLiteralFunction;
 import ro.redeul.google.go.lang.psi.expressions.literals.GoLiteralIdentifier;
-import ro.redeul.google.go.lang.psi.resolve.GoResolveResult;
+import ro.redeul.google.go.lang.psi.resolve.ResolvingCache;
 import ro.redeul.google.go.lang.psi.statements.GoLabeledStatement;
 import ro.redeul.google.go.lang.psi.toplevel.GoFunctionDeclaration;
 import ro.redeul.google.go.lang.psi.visitors.GoRecursiveElementVisitor;
@@ -34,10 +34,10 @@ public class LabelReference
                             )
                     );
 
-    private static final ResolveCache.AbstractResolver<LabelReference, GoResolveResult> RESOLVER =
-            new ResolveCache.AbstractResolver<LabelReference, GoResolveResult>() {
+    private static final ResolveCache.AbstractResolver<LabelReference, ResolvingCache.Result> RESOLVER =
+            new ResolveCache.AbstractResolver<LabelReference, ResolvingCache.Result>() {
                 @Override
-                public GoResolveResult resolve(@NotNull LabelReference labelReference, boolean incompleteCode) {
+                public ResolvingCache.Result resolve(@NotNull LabelReference labelReference, boolean incompleteCode) {
                     GoLiteralIdentifier e = labelReference.getElement();
                     GoFunctionDeclaration function = findParentOfType(e,
                             GoFunctionDeclaration.class);
@@ -71,7 +71,7 @@ public class LabelReference
                         }
                     }.visitElement(function);
 
-                    return GoResolveResult.fromElement(declaration.get());
+                    return ResolvingCache.Result.fromElement(declaration.get());
                 }
             };
 

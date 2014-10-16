@@ -8,8 +8,8 @@ import ro.redeul.google.go.lang.psi.expressions.literals.GoLiteral;
 import ro.redeul.google.go.lang.psi.expressions.literals.GoLiteralIdentifier;
 import ro.redeul.google.go.lang.psi.expressions.primary.GoCallOrConvExpression;
 import ro.redeul.google.go.lang.psi.expressions.primary.GoLiteralExpression;
-import ro.redeul.google.go.lang.psi.resolve.GoResolveResult;
 import ro.redeul.google.go.lang.psi.resolve.RefSolver;
+import ro.redeul.google.go.lang.psi.resolve.ResolvingCache;
 import ro.redeul.google.go.lang.psi.statements.GoShortVarDeclaration;
 import ro.redeul.google.go.lang.psi.toplevel.GoFunctionDeclaration;
 import ro.redeul.google.go.lang.psi.toplevel.GoFunctionParameter;
@@ -33,7 +33,7 @@ public abstract class AbstractCallOrConversionReference<
 
 
     AbstractCallOrConversionReference(GoLiteralExpression identifier,
-                                      ResolveCache.AbstractResolver<Reference, GoResolveResult> resolver) {
+                                      ResolveCache.AbstractResolver<Reference, ResolvingCache.Result> resolver) {
         super(identifier, resolver);
     }
 

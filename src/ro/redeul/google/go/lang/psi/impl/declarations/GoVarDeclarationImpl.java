@@ -4,6 +4,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
+import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 import ro.redeul.google.go.lang.psi.declarations.GoVarDeclaration;
 import ro.redeul.google.go.lang.psi.expressions.GoExpr;
@@ -29,6 +30,11 @@ public class GoVarDeclarationImpl extends GoPsiElementBase implements GoVarDecla
     @Override
     public GoLiteralIdentifier[] getIdentifiers() {
         return findChildrenByClass(GoLiteralIdentifier.class);
+    }
+
+    @Override
+    public PsiElement setName(@NotNull String name) throws IncorrectOperationException {
+        throw new IncorrectOperationException("not implemented");
     }
 
     @Override

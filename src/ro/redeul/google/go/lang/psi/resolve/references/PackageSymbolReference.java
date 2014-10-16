@@ -2,15 +2,13 @@ package ro.redeul.google.go.lang.psi.resolve.references;
 
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.impl.source.resolve.ResolveCache;
-import com.intellij.psi.scope.PsiScopeProcessor;
 import org.jetbrains.annotations.NotNull;
 import ro.redeul.google.go.lang.psi.GoPackage;
 import ro.redeul.google.go.lang.psi.expressions.literals.GoLiteralIdentifier;
 import ro.redeul.google.go.lang.psi.expressions.primary.GoSelectorExpression;
-import ro.redeul.google.go.lang.psi.resolve.GoResolveResult;
 import ro.redeul.google.go.lang.psi.resolve.PackageSymbolSolver;
-import ro.redeul.google.go.lang.psi.resolve.ResolveCacheResolvers;
+import ro.redeul.google.go.lang.psi.resolve.RefSolver;
+import ro.redeul.google.go.lang.psi.resolve.ResolvingCache;
 import ro.redeul.google.go.lang.psi.utils.GoPsiScopesUtil;
 
 public class PackageSymbolReference extends
@@ -18,9 +16,8 @@ public class PackageSymbolReference extends
 
     private GoPackage myTargetPackage;
 
-    private static final ResolveCache.AbstractResolver<PackageSymbolReference, GoResolveResult> RESOLVER =
-            ResolveCacheResolvers.<PackageSymbolReference, PackageSymbolSolver>makeDefault();
-
+    private static final ResolvingCache.Resolver<PackageSymbolReference> RESOLVER =
+            ResolvingCache.makeDefault();
 
     public PackageSymbolReference(@NotNull GoSelectorExpression selectorExpression,
                                   @NotNull GoLiteralIdentifier referenceElement,
@@ -35,8 +32,8 @@ public class PackageSymbolReference extends
     }
 
     @Override
-    public void walkSolver(PackageSymbolSolver resolver) {
-        GoPsiScopesUtil.walkPackage(resolver, getReferenceElement(), myTargetPackage);
+    public void walkSolver(RefSolver<?, ?> processor) {
+        GoPsiScopesUtil.walkPackage(processor, getReferenceElement(), myTargetPackage);
     }
 
     @Override

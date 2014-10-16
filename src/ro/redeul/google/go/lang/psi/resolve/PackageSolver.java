@@ -1,11 +1,13 @@
 package ro.redeul.google.go.lang.psi.resolve;
 
+import com.intellij.psi.PsiElement;
 import ro.redeul.google.go.lang.psi.GoPackage;
 import ro.redeul.google.go.lang.psi.GoPackageReference;
-import ro.redeul.google.go.lang.psi.resolve.references.PackageReference;
+import ro.redeul.google.go.lang.psi.resolve.refs.PackageReference;
 import ro.redeul.google.go.lang.psi.toplevel.GoImportDeclaration;
 
-public class PackageSolver extends RefSolver<PackageReference, PackageSolver> {
+public class PackageSolver extends GoReferenceSolver<PackageReference, PackageSolver> {
+
 
     public PackageSolver(PackageReference reference) {
         super(reference);
@@ -30,5 +32,15 @@ public class PackageSolver extends RefSolver<PackageReference, PackageSolver> {
         }
 
         return packageName != null && packageName.equals(getReference().getCanonicalText());
+    }
+
+    @Override
+    public PsiElement resolve(PackageReference reference) {
+        return null;
+    }
+
+    @Override
+    public Object[] getVariants() {
+        return new Object[0];
     }
 }
