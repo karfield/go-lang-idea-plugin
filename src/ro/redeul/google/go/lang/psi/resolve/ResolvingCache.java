@@ -8,51 +8,58 @@ import org.jetbrains.annotations.Nullable;
 
 public class ResolvingCache {
 
-    public interface Resolver<T extends GoReference> extends ResolveCache.AbstractResolver<T, Result> {
+    public interface SolverBasedResolver<R extends ReferenceWithSolver<?, S, R>, S extends ReferenceSolver<R, S>> extends ResolveCache.AbstractResolver<R, Result> {
     }
 
-    public static <Ref extends GoReference<?, ?, ?, Ref>> Resolver<Ref> makeDefault() {
-        return new Resolver<Ref>() {
+    public static <R extends ReferenceWithSolver<?, S, R>, S extends ReferenceSolver<R, S>> SolverBasedResolver<R, S> makeDefault() {
+        return new SolverBasedResolver<R, S>() {
             @Override
-            public Result resolve(@NotNull Ref reference, boolean incompleteCode) {
-                RefSolver<?, ?> processor = reference.newSolver();
+            public Result resolve(@NotNull R reference, boolean incompleteCode) {
 
-                reference.walkSolver(processor);
+                S solver = reference.newSolver();
 
-                return Result.fromElement(processor.getChildDeclaration());
+                ResolvingCache.Result result = ResolveCache
+                        .getInstance(reference.getElement().getProject())
+                        .resolveWithCaching(reference.self(), reference.newSolver(), true, false);
+
+//                reference.newSolver().resolve();
+//
+//                reference.walkSolver(processor);
+
+                return Result.fromElement(solver.getTarget());
             }
         };
     }
-
-    public static <R extends GoReferenceWithSolver<?, S, R>, S extends GoReferenceSolver<R, S>> S makeSolver() {
-        return new GoReferenceSolver<R, S>() {
-
-            Resolver<R> resolver = null;
-
-            @Override
-            public PsiElement resolve(R reference) {
-                if (resolver != null) {
-                    ResolvingCache.Result result = ResolveCache
-                            .getInstance(reference.getElement().getProject())
-                            .resolveWithCaching(reference.self(), resolver, true, false);
-
-                    return result != null && result.isValidResult()
-                            ? result.getElement()
-                            : null;
-                }
-
-                return null;
-            }
-
-            @Override
-            public Object[] getVariants(R reference) {
-                Solver resolver = newSolver();
-                resolver.setCollectVariants(true);
-                walkSolver(resolver);
-                return resolver.getVariants();
-            }
-        }
-    }
+//
+//    public static <R extends ReferenceWithSolver<?, S, R>, S extends ReferenceSolver<R, S>> S makeSolver() {
+//        return new ReferenceSolver<R, S>() {
+//
+//            Resolver<R> resolver = null;
+//
+//            @Override
+//            public PsiElement resolve(R reference) {
+//                if (resolver != null) {
+//                    ResolvingCache.Result result = ResolveCache
+//                            .getInstance(reference.getElement().getProject())
+//                            .resolveWithCaching(reference.self(), resolver, true, false);
+//
+//                    return result != null && result.isValidResult()
+//                            ? result.getElement()
+//                            : null;
+//                }
+//
+//                return null;
+//            }
+//
+//            @Override
+//            public Object[] getVariants(R reference) {
+//                Solver resolver = newSolver();
+//                resolver.setCollectVariants(true);
+//                walkSolver(resolver);
+//                return resolver.getVariants();
+//            }
+//        }
+//    }
 
     public static class Result implements ResolveResult {
 

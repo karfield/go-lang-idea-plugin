@@ -5,9 +5,9 @@ import com.intellij.psi.PsiReference;
 import org.jetbrains.annotations.NotNull;
 import ro.redeul.google.go.lang.psi.GoPsiElement;
 
-public abstract class GoReference<
+public abstract class Reference<
         E extends GoPsiElement,
-        Self extends GoReference<E, Self>> implements PsiReference {
+        Self extends Reference<E, Self>> implements PsiReference {
 
     E element;
 
