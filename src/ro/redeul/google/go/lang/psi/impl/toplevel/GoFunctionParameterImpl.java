@@ -49,7 +49,7 @@ public class GoFunctionParameterImpl extends GoPsiElementBase implements GoFunct
 
     @NotNull
     @Override
-    public String getPresentationTailText() {
+    public String getLookupTailText() {
         StringBuilder presentationText = new StringBuilder();
 
         GoLiteralIdentifier[] identifiers = getIdentifiers();
@@ -68,7 +68,7 @@ public class GoFunctionParameterImpl extends GoPsiElementBase implements GoFunct
         }
 
         if (getType() != null) {
-            presentationText.append(getType().getPresentationTailText());
+            presentationText.append(getType().getLookupTailText());
         }
 
         return presentationText.toString();
