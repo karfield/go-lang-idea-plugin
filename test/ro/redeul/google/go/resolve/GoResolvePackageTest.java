@@ -1,10 +1,5 @@
 package ro.redeul.google.go.resolve;
 
-import com.intellij.psi.PsiElement;
-import ro.redeul.google.go.lang.psi.toplevel.GoTypeSpec;
-
-import static ro.redeul.google.go.util.GoPsiTestUtils.getAs;
-
 public class GoResolvePackageTest extends GoPsiResolveTestCase {
 
     @Override
@@ -12,23 +7,15 @@ public class GoResolvePackageTest extends GoPsiResolveTestCase {
         return super.getTestDataRelativePath() + "package/";
     }
 
-//    public void testBuiltinTypes() throws Exception {
-//        doTest();
-//    }
-//
-//    public void testBuiltinConversion() throws Exception {
-//        doTest();
-//    }
-//
-//    public void testVarBuiltinType() throws Exception {
-//        doTest();
-//    }
-//
-//    public void testVarMethodType() throws Exception {
-//        doTest();
-//    }
-//
-    public void testNamedImport() throws Exception {
+    public void testAliasedImport() throws Exception {
+        doTest();
+    }
+
+    public void testDefaultImport() throws Exception {
+        doTest();
+    }
+
+    public void testDefaultImportWithDifferentName() throws Exception {
         doTest();
     }
 }
