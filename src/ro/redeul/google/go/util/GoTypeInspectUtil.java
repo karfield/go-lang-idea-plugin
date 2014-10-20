@@ -35,7 +35,7 @@ public class GoTypeInspectUtil {
         if (psiType instanceof GoPsiTypeInterface)
             return true;
         if (psiType instanceof GoPsiTypeName)
-            return psiType.getName().equals("error") && ((GoPsiTypeName) psiType).isPrimitive();
+            return ((GoPsiTypeName)psiType).getName().equals("error") && ((GoPsiTypeName) psiType).isPrimitive();
         if (psiType instanceof GoPsiTypeSlice)
             return checkIsInterface(((GoPsiTypeSlice) psiType).getElementType());
         if (psiType instanceof GoPsiTypePointer)
@@ -63,7 +63,8 @@ public class GoTypeInspectUtil {
         //Fix issue #520 with nil
         if (IsNil(expr)) {
             if (resolved instanceof GoPsiTypeName) {
-                if (((GoPsiTypeName) resolved).isPrimitive() && resolved.getName().equals("error")) {
+                GoPsiTypeName typeName = (GoPsiTypeName) resolved;
+                if (typeName.isPrimitive() && typeName.getName() != null && typeName.getName().equals("error")) {
                     return true;
                 }
             }
