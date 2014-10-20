@@ -139,8 +139,9 @@ public abstract class GoFileBasedPsiTestCase extends GoPsiTestCase {
                 LocalFileSystem.getInstance()
                         .findFileByPath(getTestDataPath() + "/builtin.go");
 
-        if ( builtin != null )
-            createFile(getModule(), contentRoot, "builtin.go", VfsUtil.loadText(builtin));
+        if ( builtin != null ) {
+            createFile(myModule, createChildDirectory(contentRoot, "builtin"), "builtin.go", VfsUtil.loadText(builtin));
+        }
     }
 
     private Map<PsiFile, String> files = new HashMap<PsiFile, String>();
