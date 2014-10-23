@@ -28,16 +28,13 @@ public class GoConfigurableForm {
         componentPanel.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentMoved(ComponentEvent e) {
-                System.out.println("Moved " + e);
             }
 
             public void componentHidden(ComponentEvent ce) {
-                System.out.println("Component hidden!");
             }
 
             @Override
             public void componentShown(ComponentEvent e) {
-                System.out.println("Component shown");
             }
         });
     }

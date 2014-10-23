@@ -23,4 +23,9 @@ public class GoUnderlyingTypeSlice implements GoUnderlyingType{
     public String toString() {
         return String.format("[]%s", memberType.toString());
     }
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visitSlice(this);
+    }
 }
