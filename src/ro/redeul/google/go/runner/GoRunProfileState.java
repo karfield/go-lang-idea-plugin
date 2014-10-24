@@ -82,7 +82,7 @@ public class GoRunProfileState extends CommandLineState {
             }
 
             commandLine.getEnvironment().putAll(sysEnv);
-            commandLine.withWorkDirectory(m_configuration.workingDir);
+            commandLine.setWorkDirectory(m_configuration.workingDir);
 
             return GoApplicationProcessHandler.runCommandLine(commandLine);
         }
@@ -143,7 +143,7 @@ public class GoRunProfileState extends CommandLineState {
         GeneralCommandLine commandLine = new GeneralCommandLine();
 
         commandLine.setExePath(execName);
-        commandLine.withWorkDirectory(m_configuration.workingDir);
+        commandLine.setWorkDirectory(m_configuration.workingDir);
         if (m_configuration.scriptArguments != null && m_configuration.scriptArguments.trim().length() > 0) {
             commandLine.getParametersList().addParametersString(m_configuration.scriptArguments);
         }

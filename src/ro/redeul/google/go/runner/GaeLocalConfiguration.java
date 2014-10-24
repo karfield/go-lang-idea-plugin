@@ -183,7 +183,7 @@ public class GaeLocalConfiguration extends ModuleBasedConfiguration<GoApplicatio
                 }
 
                 commandLine.getEnvironment().putAll(sysEnv);
-                commandLine.withWorkDirectory(workingDir);
+                commandLine.setWorkDirectory(workingDir);
 
                 return GoApplicationProcessHandler.runCommandLine(commandLine);
             }

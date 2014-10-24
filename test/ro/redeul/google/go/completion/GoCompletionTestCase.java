@@ -3,7 +3,6 @@ package ro.redeul.google.go.completion;
 import com.intellij.codeInsight.completion.CompletionType;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.newvfs.impl.VfsRootAccess;
 import ro.redeul.google.go.GoLightCodeInsightFixtureTestCase;
 
 import java.io.File;
@@ -29,7 +28,7 @@ public abstract class GoCompletionTestCase
         // @TODO Fix this. Hack way to allow test to run
         try {
             String testDataRootDir = new File(GoCompletionTestCase.class.getProtectionDomain().getCodeSource().getLocation().getPath() + "../../../" + testDataRoot).getCanonicalPath();
-            VfsRootAccess.allowRootAccess(testDataRootDir);
+            //VfsRootAccess.allowRootAccess(testDataRootDir);
         } catch (IOException ignored) {}
 
         LocalFileSystem fileSystem = LocalFileSystem.getInstance();

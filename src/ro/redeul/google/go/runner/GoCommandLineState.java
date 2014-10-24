@@ -139,7 +139,7 @@ class GoCommandLineState extends CommandLineState {
         }
 
         testInstallDependencies.getEnvironment().putAll(sysEnv);
-        testInstallDependencies.withWorkDirectory(workingDir);
+        testInstallDependencies.setWorkDirectory(workingDir);
         try {
             if (testInstallDependencies.createProcess().waitFor() == 0) {
                 VirtualFileManager.getInstance().syncRefresh();
@@ -185,7 +185,7 @@ class GoCommandLineState extends CommandLineState {
         }
 
         commandLine.getEnvironment().putAll(sysEnv);
-        commandLine.withWorkDirectory(workingDir);
+        commandLine.setWorkDirectory(workingDir);
 
         if (testConfiguration.testArgs != null && testConfiguration.testArgs.trim().length() > 0) {
             commandLine.getParametersList().addParametersString(testConfiguration.testArgs);

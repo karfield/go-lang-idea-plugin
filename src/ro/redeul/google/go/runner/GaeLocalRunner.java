@@ -45,7 +45,6 @@ public class GaeLocalRunner extends DefaultProgramRunner {
             return null;
         }
 
-        env = RunContentBuilder.fix(env, this);
-        return new RunContentBuilder(executionResult, env).showRunContent(env.getContentToReuse());
+        return new RunContentBuilder(this, executionResult, env).showRunContent(env.getContentToReuse());
     }
 }

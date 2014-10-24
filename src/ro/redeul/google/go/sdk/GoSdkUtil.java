@@ -162,7 +162,7 @@ public class GoSdkUtil {
             GeneralCommandLine command = new GeneralCommandLine();
             command.setExePath(goCommand);
             command.addParameter("version");
-            command.withWorkDirectory(path);
+            command.setWorkDirectory(path);
             command.getEnvironment().put("GOROOT", path);
 
             ProcessOutput output = new CapturingProcessHandler(
@@ -193,7 +193,7 @@ public class GoSdkUtil {
             GeneralCommandLine command = new GeneralCommandLine();
             command.setExePath(goCommand);
             command.addParameter("env");
-            command.withWorkDirectory(path);
+            command.setWorkDirectory(path);
             command.getEnvironment().put("GOROOT", path);
 
             ProcessOutput output = new CapturingProcessHandler(
@@ -273,7 +273,7 @@ public class GoSdkUtil {
         }
 
         command.setExePath(execName);
-        command.withWorkDirectory(homePath);
+        command.setWorkDirectory(homePath);
         command.addParameter("env");
 
         sdkData.TARGET_ARCH = GoTargetArch._amd64;
